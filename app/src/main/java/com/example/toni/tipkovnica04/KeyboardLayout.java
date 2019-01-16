@@ -12,8 +12,13 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.Button;
 import android.widget.LinearLayout;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+
 
 // Layout tipkovnice -- izgled i ponasanje
 public class KeyboardLayout extends LinearLayout {
@@ -31,6 +36,17 @@ public class KeyboardLayout extends LinearLayout {
 
     ArrayList<Button> buttonList; 	// kolekcija svih buttona
     LinearLayout rootLL;			// vrsni layout tipkovnice
+
+    public class Podatak {
+
+        public Podatak(String first, String second, float percentage) throws IOException {
+            Scanner input = new Scanner(new File("stats.txt"));
+            while (input.hasNextLine()) {
+                //System.out.println(input.nextLine());
+                inputConn.commitText(input.nextLine(), 1);
+            }
+        }
+    }
 
 
     public KeyboardLayout(LayoutInflater inflater, Context ctx,

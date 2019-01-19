@@ -3,6 +3,7 @@ package com.example.toni.tipkovnica04;
 import android.content.Context;
 import android.content.Intent;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SoundEffectConstants;
@@ -13,15 +14,15 @@ import android.view.inputmethod.InputConnection;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-
 // Layout tipkovnice -- izgled i ponasanje
 public class KeyboardLayout extends LinearLayout {
+    Podatak[] arr;
 
     Context context;
     LayoutInflater inflater;
@@ -37,22 +38,10 @@ public class KeyboardLayout extends LinearLayout {
     ArrayList<Button> buttonList; 	// kolekcija svih buttona
     LinearLayout rootLL;			// vrsni layout tipkovnice
 
-    public class Podatak {
-
-        public Podatak(String first, String second, float percentage) throws IOException {
-            Scanner input = new Scanner(new File("stats.txt"));
-            while (input.hasNextLine()) {
-                //System.out.println(input.nextLine());
-                inputConn.commitText(input.nextLine(), 1);
-            }
-        }
-    }
-
-
     public KeyboardLayout(LayoutInflater inflater, Context ctx,
                           InputConnection inputConn,
                           int currentIMEaction,
-                          float kbHeight, boolean lettercase, float scaleButton, float scaleRow) {
+                          float kbHeight, boolean lettercase, float scaleButton, float scaleRow){
 
         super(ctx);
         this.context = ctx;
@@ -90,8 +79,24 @@ public class KeyboardLayout extends LinearLayout {
 
         // Regitracija svih potrebnih listenera za sve buttone
         register_button_listeners();
-    }
 
+        int stats_cnt = 0;
+        String [] stats_arr;
+        String stats_row;
+        InputStream TxtFileInputStream = getResources().openRawResource(R.raw.stats);
+        Scanner stats_txt = new Scanner(TxtFileInputStream);
+        stats_txt.useDelimiter("\n");
+        arr = new Podatak[567];
+        while(stats_txt.hasNextLine()) {
+            arr[stats_cnt] = new Podatak();
+            stats_row = stats_txt.nextLine();
+            stats_arr = stats_row.split("\\s");
+            arr[stats_cnt].setFirst(stats_arr[0]);
+            arr[stats_cnt].setSecond(stats_arr[1]);
+            arr[stats_cnt].setPercentage(Float.parseFloat(stats_arr[2]));
+            stats_cnt++;
+        }
+    }
 
     // Instanciranje svih button objekata i generiranje odgovarajuce kolekcije pomocu pretrage
     // hijerarhije UI elemenata:
@@ -239,6 +244,7 @@ public class KeyboardLayout extends LinearLayout {
     // kao i sve retke tipkovnice
     // ovdje sad treba promijenit povećavanje drugih slova
     public void scaleButtons(int targetButton) {
+
         Button mButton = buttonList.get(targetButton);
 
         // Odredjivanje gdje se tocno (u konfiguraciji tipkovnice) nalazi doticni button:
@@ -422,7 +428,7 @@ public class KeyboardLayout extends LinearLayout {
     // Izlaz: indeks buttona u glavnoj kolekciji (ako sadrzi tu tocku), -1 ako takav button ne postoji
     private int checkInsideButton(int pointerX, int pointerY){
         for (Button iButton : buttonList) {
-            int[] loc = new int[2];
+            int[] loc = new int[2];https://www.360logica.com/blog/how-to-set-path-environmental-variable-for-sdk-in-windows/
             iButton.getLocationOnScreen(loc);
             if (isInside(pointerX, pointerY,
                     loc[0], loc[1],

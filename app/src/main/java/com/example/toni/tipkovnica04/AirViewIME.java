@@ -51,6 +51,7 @@ public class AirViewIME extends InputMethodService
 
     @Override
     public void onWindowShown() {
+
         enableKeyboard();
     }
 

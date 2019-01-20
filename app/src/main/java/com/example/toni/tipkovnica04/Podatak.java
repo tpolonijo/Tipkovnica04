@@ -1,7 +1,5 @@
 package com.example.toni.tipkovnica04;
 
-import java.io.IOException;
-
 public class Podatak {
     private String first;
     private String second;

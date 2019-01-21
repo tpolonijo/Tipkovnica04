@@ -4,15 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.inputmethodservice.InputMethodService;
-import android.inputmethodservice.KeyboardView;
 import android.preference.PreferenceManager;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.widget.TextView;
 
 // Custom IME (Input Method)
 // Tipkovnica kao "regularni servis" koji ce se vizualizirati unutar svake aplikacije i
@@ -24,7 +19,6 @@ public class AirViewIME extends InputMethodService
     LayoutInflater inflater;
     KeyboardLayout layout;
     boolean LOWERCASE = true;                   // character case (lower/upper => true/false)
-    boolean START = false;
     float KEYBOARD_HEIGHT = 0.285f;             // velicina tipkovnice - deafult
     float SCALE_FACTOR_SINGLE_BUTTON = 0.2f;   // skalirani (uvecani) button - default
     float SCALE_FACTOR_SINGLE_ROW = 0.40f;      // skalirani (uvecani) redak - deafult
@@ -56,10 +50,6 @@ public class AirViewIME extends InputMethodService
     public void onWindowShown() {
 
         enableKeyboard();
-    }
-
-    public void onStartClicked() {
-
     }
 
     // Instanciranje layout-a tipkovnice sa svim potrebnim postavkama

@@ -2,9 +2,7 @@ package com.example.toni.tipkovnica04;
 
 import android.content.Context;
 import android.content.Intent;
-import android.inputmethodservice.KeyboardView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SoundEffectConstants;
@@ -61,7 +59,6 @@ public class KeyboardLayout extends LinearLayout {
         DisplayMetrics dm = ctx.getResources().getDisplayMetrics();
         float kbScale = KEYBOARD_HEIGHT_SCALE_FACTOR * dm.heightPixels;
         int availableHeight = (int)kbScale;
-        //int availableWidth = dm.widthPixels;
 
         // Ucitavanje layout-a tipkovnice iz odgovarajuceg xml-a:
         inflater.inflate(R.layout.keyboard_layout, this);
@@ -117,11 +114,6 @@ public class KeyboardLayout extends LinearLayout {
                 ((Button)iElement).setPaddingRelative(0, 0, 0, 0);
                 ((Button)iElement).setTransformationMethod(null);
                 ((Button)iElement).setSoundEffectsEnabled(true);
-                /*if (LOWERCASE){
-                    ((Button)iElement).setText(((Button)iElement).getText().toString().toLowerCase());
-                } else {
-                    ((Button)iElement).setText(((Button)iElement).getText().toString().toUpperCase());
-                }*/
                 buttonList.add((Button)iElement);
             }
         }
@@ -146,7 +138,7 @@ public class KeyboardLayout extends LinearLayout {
         return visited;
     }
 
-    // Registracija TOUCH i HOVER listenera za sve buttone u glavnoj kolekciji:
+    // Registracija TOUCH listenera za sve buttone u glavnoj kolekciji:
     private void register_button_listeners(){
 
         for(Button iButton : buttonList){
@@ -160,17 +152,6 @@ public class KeyboardLayout extends LinearLayout {
                     if (action == MotionEvent.ACTION_DOWN) {
                         return false;
                     }
-
-                    /*if (action == MotionEvent.ACTION_MOVE) {
-                        // Ako postoji "klizanje" po tipkovnici, onda na takvo "klizanje" skaliraj
-                        // trenutni prikaz redaka i konkretnog slova:
-                        int insideIndex = checkInsideButton((int)event.getRawX(), (int)event.getRawY());
-                        // System.out.println("***** Button index found: " + insideIndex);
-                        if (insideIndex != -1){
-                            scaleButtons(insideIndex);
-                        }lowerBoundButton
-                        return false;
-                    }*/
 
                     if (action == MotionEvent.ACTION_UP) {
                         // Na event "UP" treba se obaviti konkretno upisivanje slova/znaka u input stream.
@@ -224,26 +205,6 @@ public class KeyboardLayout extends LinearLayout {
                     return false;
                 }
             });
-
-            ////// HOVER listeneri:
-            iButton.setOnHoverListener(new View.OnHoverListener() {
-                // Skaliranje na validni hover_move event
-                @Override
-                public boolean onHover(View view, MotionEvent motionEvent) {
-                    final int action = motionEvent.getAction();
-                    if (action == MotionEvent.ACTION_HOVER_MOVE) {
-                        int insideIndex =
-                                checkInsideButton((int)motionEvent.getRawX(),
-                                        (int)motionEvent.getRawY());
-
-                        if (insideIndex != -1){
-                            scaleButtons(insideIndex);
-                        }
-                        return false;
-                    }
-                    return false;
-                }
-            });
         }
     }
 
@@ -283,12 +244,7 @@ public class KeyboardLayout extends LinearLayout {
         float percentage_max = 0.25f;
         for (int i = 0; i < arr.length; i++) {
             if (possible_buttons.size() > 9) break;
-            //System.out.println("dobio sam button " + mButton.getText().toString());
-            //System.out.println("dobio sam arr " + arr[i].getFirst());
-            //Log.e("tip button", mButton.getText().toString().getClass().getName());
-            //Log.e("tip arr", arr[i].getFirst().getClass().getName());
             if (mButton.getText().toString().equals(arr[i].getFirst())) {
-                //Log.e("dobio sam slova", mButton.getText().toString());
                 System.out.println(mButton.getText().toString());
 
                 if ((arr[i].getPercentage() > percentage_max) && possible_buttons.size() < 9) {
@@ -297,7 +253,6 @@ public class KeyboardLayout extends LinearLayout {
             }
         }
 
-        //TU SAD KRIVO RADIM, TU TREBAM PROVJERAVAT U KOJEM REDU SE NALAZI ZADNJI ELEMENT IZ possible_buttons
         for (Button iButton : buttonList) {
             for (int i = 0; i < possible_buttons.size(); i++) {
                 if (iButton.getText().toString().equals(possible_buttons.get(i))) {
@@ -307,60 +262,14 @@ public class KeyboardLayout extends LinearLayout {
                 }
             }
         }
-        //System.out.println("moguće kombinacije nakon slova " + mButton.getText() + possible_buttons.size());
-
-        // Prvi redak --> indeksi [0...9]
-        if (targetButton <= 9) {
-            //lowerBoundButton = 0;
-            //upperBoundButton = 9;
-            targetRow = 1;
-        }
-        // Drugi redak --> indeksi [10...19]
-        else if ((targetButton >= 10) && (targetButton <= 19)) {
-            //lowerBoundButton = 10;
-            //upperBoundButton = 19;
-            targetRow = 2;
-        }
-        // Treci redak --> indeksi [20...28]
-        else if ((targetButton >= 20) && (targetButton <= 28)) {
-            //lowerBoundButton = 20;
-            //upperBoundButton = 28;
-            targetRow = 3;
-        }
-        // Cetvrti redak --> indeksi [29...31]
-        else if ((targetButton >= 29) && (targetButton <= 31)) {
-            //lowerBoundButton = 29;
-            //upperBoundButton = 31;
-            targetRow = 4;
-        }
 
         // Racunaju tezinskih faktora za buttone u svakom retku.
         // Podsjetnik: inicijalni tezinski faktor za "obican" button (slovo) jest 0.1.
         float scalefactorOthers1 = 0f, scalefactorOthers2 = 0f, scalefactorOthers3 = 0f;
-        //if (cnt_row1 == 0) cnt_row1 = 1;
-        //if (cnt_row2 == 0) cnt_row2 = 1;
-        //if (cnt_row3 == 0) cnt_row3 = 1;
 
         scalefactorOthers1 = (1f - cnt_row1*SCALE_FACTOR_SINGLE_BUTTON) / (10-cnt_row1);
         scalefactorOthers2 = (1f - cnt_row2*SCALE_FACTOR_SINGLE_BUTTON) / (10-cnt_row2);
         scalefactorOthers3 = (1f - 0.3f - cnt_row3*SCALE_FACTOR_SINGLE_BUTTON) / (7-cnt_row3);
-
-        /*if (targetRow == 1) {
-            // Ukupno 10 buttona, bez placeholdera:
-            scalefactorOthers1 = (1f - cnt_row1*SCALE_FACTOR_SINGLE_BUTTON) / (10-cnt_row1);
-        }
-        if (targetRow == 2) {
-            // Ukupno 10 buttona, bez placeholdera:
-            scalefactorOthers2 = (1f - cnt_row2*SCALE_FACTOR_SINGLE_BUTTON) / (10-cnt_row2);
-        }
-        if (targetRow == 3) {
-            // Ukupno 7 buttona, START i DEL /default 0.15)
-            scalefactorOthers3 =
-                    (1f - 0.3f - cnt_row3*SCALE_FACTOR_SINGLE_BUTTON) / (7-cnt_row3);
-        }*/
-
-        // Apliciranje skaliranja svih redaka:
-        //scaleRows(targetRow, SCALE_FACTOR_SINGLE_ROW);
 
         // Postav novih tezinskih faktora za buttone:::
         // Button koji ce se povecati:
@@ -422,54 +331,6 @@ public class KeyboardLayout extends LinearLayout {
             }
         }
     }
-
-
-    // Metoda koja skalira ISKLJUCIVO retke (dio koji se ionako mora odraditi prije skaliranja
-    // buttona u doticnom retku):
-    public void scaleRows(int targetRow, float SCALE_FACTOR_SINGLE_ROW){
-        LinearLayout firstLL = rootLL.findViewById(R.id.firstView);
-        LinearLayout secondLL = rootLL.findViewById(R.id.secondView);
-        LinearLayout thirdLL = rootLL.findViewById(R.id.thirdView);
-        LinearLayout fourthLL = rootLL.findViewById(R.id.fourthView);
-
-        // Skaliranje redaka -> izracun i postav novih tezinskih faktora za retke.
-        // Podsjetnik: inicijalne visine redaka su 25% visine cijele TIPKOVNICE (tezinski faktor 0.25)
-        // Prije skaliranja: 0.25 - 0.25 - 0.25 - 0.25
-        // Nakon skaliranja: ovisi o postovakam korisnika
-        LinearLayout.LayoutParams paramsEnlargeRow = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                0,
-                SCALE_FACTOR_SINGLE_ROW);
-
-        LinearLayout.LayoutParams paramsShrinkRow = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                0,
-                (1f - SCALE_FACTOR_SINGLE_ROW) / 3);
-
-        // Apliciranje novih tezinskih faktora na retke tipkovnice:
-        if (targetRow == 1) {
-            firstLL.setLayoutParams(paramsEnlargeRow);
-            secondLL.setLayoutParams(paramsShrinkRow);
-            thirdLL.setLayoutParams(paramsShrinkRow);
-            fourthLL.setLayoutParams(paramsShrinkRow);
-        } else if (targetRow == 2) {
-            secondLL.setLayoutParams(paramsEnlargeRow);
-            firstLL.setLayoutParams(paramsShrinkRow);
-            thirdLL.setLayoutParams(paramsShrinkRow);
-            fourthLL.setLayoutParams(paramsShrinkRow);
-        } else if (targetRow == 3) {
-            thirdLL.setLayoutParams(paramsEnlargeRow);
-            firstLL.setLayoutParams(paramsShrinkRow);
-            secondLL.setLayoutParams(paramsShrinkRow);
-            fourthLL.setLayoutParams(paramsShrinkRow);
-        } else if (targetRow == 4) {
-            fourthLL.setLayoutParams(paramsEnlargeRow);
-            firstLL.setLayoutParams(paramsShrinkRow);
-            secondLL.setLayoutParams(paramsShrinkRow);
-            thirdLL.setLayoutParams(paramsShrinkRow);
-        }
-    }
-
 
     // Provjera: nalazi li se tocka trenutnog dodira (na zaslonu) unutar nekog od buttona na
     // tipkovnici?

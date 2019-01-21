@@ -6,8 +6,8 @@
     <CheckBoxPreference
         android:key="lettercase"
         android:title="@string/lettercase"
-        android:summaryOn="@string/lowercase_on"
-        android:summaryOff="@string/lowercase_off"
+        android:summaryOn="@string/enlargement_on"
+        android:summaryOff="@string/enlargement_off"
         android:defaultValue="true"/>
     <EditTextPreference
         android:key="enlarge_key_percentage"

@@ -31,7 +31,6 @@ public class KeyboardLayout extends LinearLayout {
     int currentIMEaction;
 
     boolean LOWERCASE = true;
-    boolean START;
 
     float KEYBOARD_HEIGHT_SCALE_FACTOR = 0.285f;
     float SCALE_FACTOR_SINGLE_BUTTON = 0.25f;
@@ -43,7 +42,7 @@ public class KeyboardLayout extends LinearLayout {
     public KeyboardLayout(LayoutInflater inflater, Context ctx,
                           InputConnection inputConn,
                           int currentIMEaction,
-                          float kbHeight, boolean lettercase, float scaleButton, float scaleRow, boolean start){
+                          float kbHeight, boolean lettercase, float scaleButton, float scaleRow){
 
         super(ctx);
         this.context = ctx;
@@ -51,7 +50,6 @@ public class KeyboardLayout extends LinearLayout {
         this.inputConn = inputConn;
         this.currentIMEaction = currentIMEaction;
 
-        this.START = start;
         this.KEYBOARD_HEIGHT_SCALE_FACTOR = kbHeight;
         this.LOWERCASE = lettercase;
         this.SCALE_FACTOR_SINGLE_BUTTON = scaleButton;
@@ -119,11 +117,11 @@ public class KeyboardLayout extends LinearLayout {
                 ((Button)iElement).setPaddingRelative(0, 0, 0, 0);
                 ((Button)iElement).setTransformationMethod(null);
                 ((Button)iElement).setSoundEffectsEnabled(true);
-                if (LOWERCASE){
+                /*if (LOWERCASE){
                     ((Button)iElement).setText(((Button)iElement).getText().toString().toLowerCase());
                 } else {
                     ((Button)iElement).setText(((Button)iElement).getText().toString().toUpperCase());
-                }
+                }*/
                 buttonList.add((Button)iElement);
             }
         }
@@ -212,7 +210,9 @@ public class KeyboardLayout extends LinearLayout {
                             //resetButtons();
                             Button target = buttonList.get(insideIndex);
                             inputConn.commitText(target.getText(), 1);
-                            scaleButtons(insideIndex);
+                            if(LOWERCASE) {
+                                scaleButtons(insideIndex);
+                            }
                         }
 
                         // Zvucni feedback

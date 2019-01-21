@@ -2,6 +2,7 @@ package com.example.toni.tipkovnica04;
 
 import android.os.Bundle;
 import android.preference.EditTextPreference;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
@@ -48,8 +49,25 @@ public class ImePreferences extends /*PreferenceActivity*/ AppCompatActivity {
             // (kada ovoga ne bi bilo, onda bi se takva informcija vizualizirala tek po
             // ponovnom ucitavanju Preference zaslona):
             setEditTextListener("enlarge_key_percentage");
+            setCheckBoxListener(true);
         }
 
+        protected void setCheckBoxListener(final Boolean standard) {
+            CheckBoxPreference cbPref = (CheckBoxPreference)getPreferenceManager().findPreference("cbPref");
+            if(cbPref != null) {
+                cbPref.setOnPreferenceChangeListener(new CheckBoxPreference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        if(newValue instanceof Boolean){
+                            Boolean standard = (Boolean)newValue;
+                        }
+                        return standard;
+                    }
+                });
+
+                cbPref.setChecked(standard);
+            }
+        }
 
         protected void setEditTextListener(String preferenceKey){
             EditTextPreference etPref =

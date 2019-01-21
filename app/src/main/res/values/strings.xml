@@ -3,9 +3,9 @@
     <string name="my_ime">AirView Keyboard</string>
 
     <string name="settings_name">Settings</string>
-    <string name="lettercase">Complete letter disapearance</string>
-    <string name="lowercase_on">ON</string>
-    <string name="lowercase_off">OFF</string>
+    <string name="lettercase">Enlargement possible</string>
+    <string name="enlargement_on">ON</string>
+    <string name="enlargement_off">OFF</string>
     <string name="enlarge_title_key">Key enlargement (out of 1.0)</string>
     <string name="enlargement_default_key">0.2</string>
 

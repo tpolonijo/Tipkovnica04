@@ -72,7 +72,7 @@ public class AirViewIME extends InputMethodService
         layout = new KeyboardLayout(inflater, context,
                 this.getCurrentInputConnection(),
                 this.getImeAction(this.getCurrentInputEditorInfo().imeOptions),
-                KEYBOARD_HEIGHT, LOWERCASE, SCALE_FACTOR_SINGLE_BUTTON, SCALE_FACTOR_SINGLE_ROW, START);
+                KEYBOARD_HEIGHT, LOWERCASE, SCALE_FACTOR_SINGLE_BUTTON, SCALE_FACTOR_SINGLE_ROW);
 
         // Apliciranje custom tipkovnice:
         setInputView(layout);
